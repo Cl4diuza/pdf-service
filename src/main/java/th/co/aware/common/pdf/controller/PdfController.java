@@ -1,8 +1,6 @@
 package th.co.aware.common.pdf.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,18 +18,16 @@ public class PdfController {
     @Autowired
     private PdfService service;
 
-    private HttpHeaders headers = new HttpHeaders();
-
     @GetMapping("/get")
     public ResponseEntity<List<Pdf>> getAll() {
         List<Pdf> pdfList = service.getAll();
         return new ResponseEntity<>(pdfList, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/create", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<InputStreamResource> hello(@RequestBody ReportRequest request) {
-        headers.add("Content-Disposition", "inline; filename=report.pdf");
-        return new ResponseEntity<>(new InputStreamResource(service.create(request)), headers, HttpStatus.CREATED);
+    @PostMapping("/create")
+    public ResponseEntity<Void> createPdf(@RequestBody ReportRequest request) {
+        service.create(request);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

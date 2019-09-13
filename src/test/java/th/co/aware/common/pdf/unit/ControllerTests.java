@@ -41,13 +41,13 @@ public class ControllerTests {
 
     @Test
     public void test() {
-        ResponseEntity<String> response = template.getForEntity("http://localhost:" + port + "/pdf/hello", String.class);
-        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        ResponseEntity<String> response = template.getForEntity("http://localhost:" + port + "/pdf/create", String.class);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
     }
 
     @Test
     public void getAllPdf() {
-        ResponseEntity<Pdf[]> response = template.getForEntity("http://localhost:" + port + "/pdf/getall", Pdf[].class);
+        ResponseEntity<Pdf[]> response = template.getForEntity("http://localhost:" + port + "/pdf/get", Pdf[].class);
         Assert.assertNotNull(response.getBody());
         log.info(Arrays.toString(response.getBody()));
         Pdf[] pdfList = response.getBody();
