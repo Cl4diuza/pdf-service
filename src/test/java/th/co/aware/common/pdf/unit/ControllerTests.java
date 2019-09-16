@@ -14,6 +14,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import th.co.aware.common.pdf.dto.ReportRequest;
 import th.co.aware.common.pdf.entity.Pdf;
 import th.co.aware.common.pdf.logic.PdfService;
 
@@ -40,8 +41,9 @@ public class ControllerTests {
     }
 
     @Test
-    public void test() {
-        ResponseEntity<String> response = template.getForEntity("http://localhost:" + port + "/pdf/create", String.class);
+    public void create() {
+        ResponseEntity<Void> response = template.postForEntity("http://localhost:" + port + "/pdf/create",
+                new ReportRequest("1", "2", "3", "4"), Void.class);
         Assert.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
     }
 
@@ -49,8 +51,8 @@ public class ControllerTests {
     public void getAllPdf() {
         ResponseEntity<Pdf[]> response = template.getForEntity("http://localhost:" + port + "/pdf/get", Pdf[].class);
         Assert.assertNotNull(response.getBody());
-        log.info(Arrays.toString(response.getBody()));
         Pdf[] pdfList = response.getBody();
-        log.info(pdfList[0].getName());
+        Assert.assertNotEquals(0, pdfList.length);
+        Assert.assertEquals(2, pdfList.length);
     }
 }

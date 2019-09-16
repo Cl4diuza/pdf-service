@@ -39,6 +39,11 @@ public class ServiceTests {
         List<Pdf> other = service.getAll();
         Assert.assertNotEquals(0, other.size());
         Assert.assertEquals("away", other.get(0).getName());
+
+        // clean up
+        repo.deleteAll(other);
+        List<Pdf> list = repo.findByName("away");
+        Assert.assertEquals(0, list.size());
     }
 
     @Test
@@ -47,6 +52,104 @@ public class ServiceTests {
         List<Pdf> pdfList = service.getAll();
         Assert.assertEquals(3, pdfList.size());
         Assert.assertEquals("opal3", pdfList.get(2).getUserId());
+    }
+
+    @Test
+    public void nullRequst() {
+        try {
+            service.create(null);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("request.not.null", e.getMessage());
+        }
+    }
+
+    @Test
+    public void nullNameTest() {
+        ReportRequest request = new ReportRequest("opal1", "far", null, "file");
+        try {
+            service.create(request);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("name.not.null", e.getMessage());
+        }
+    }
+
+    @Test
+    public void EmptyNameTest() {
+        ReportRequest request = new ReportRequest("opal1", "far", "", "file");
+        try {
+            service.create(request);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("name.not.empty", e.getMessage());
+        }
+    }
+
+    @Test
+    public void nullUserIdTest() {
+        ReportRequest request = new ReportRequest(null, "far", "name", "file");
+        try {
+            service.create(request);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("user.not.null", e.getMessage());
+        }
+    }
+
+    @Test
+    public void EmptyUserIdTest() {
+        ReportRequest request = new ReportRequest("", "far", "name", "file");
+        try {
+            service.create(request);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("user.not.empty", e.getMessage());
+        }
+    }
+
+    @Test
+    public void nullServiceTest() {
+        ReportRequest request = new ReportRequest("opal1", null, "name", "file");
+        try {
+            service.create(request);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("service.not.null", e.getMessage());
+        }
+    }
+
+    @Test
+    public void emptyServiceTest() {
+        ReportRequest request = new ReportRequest("opal1", "", "name", "file");
+        try {
+            service.create(request);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("service.not.empty", e.getMessage());
+        }
+    }
+
+    @Test
+    public void nullPayloadTest() {
+        ReportRequest request = new ReportRequest("opal1", "far", "name", null);
+        try {
+            service.create(request);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("payload.not.null", e.getMessage());
+        }
+    }
+
+    @Test
+    public void emptyPayloadTest() {
+        ReportRequest request = new ReportRequest("opal1", "far", "name", "");
+        try {
+            service.create(request);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("payload.not.empty", e.getMessage());
+        }
     }
 
     @TestConfiguration

@@ -6,10 +6,13 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import th.co.aware.common.pdf.client.StorageClient;
+import th.co.aware.common.pdf.config.KafkaProcessor;
 import th.co.aware.common.pdf.dto.ReportRequest;
 import th.co.aware.common.pdf.entity.Pdf;
 import th.co.aware.common.pdf.entity.PdfRepository;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @Slf4j
@@ -18,6 +21,8 @@ public class PdfService {
 
     @Autowired
     private PdfRepository repo;
+    @Autowired
+    private StorageClient client;
 
     @StreamListener(KafkaProcessor.CREATE)
     public void listener(ReportRequest request) {
@@ -29,11 +34,13 @@ public class PdfService {
         Pdf pdf = toEntity(request);
         repo.save(pdf);
 
-        // TODO storage client
-        // get template
+        // TODO get template to send to generate report class
         // String template = pdf.getName();
-        // send template paramIn
-        // ByteArrayInputStream bis = GeneratePdfReport.generateReport(pdf.getPayload());
+        // generateReport(template, pdf.getPayload());
+
+        ByteArrayInputStream bis = GeneratePdfReport.generateReport(pdf.getPayload());
+        // TODO storage client
+        client.send(bis);
     }
 
     public List<Pdf> getAll() {

@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
+import th.co.aware.common.pdf.config.KafkaProcessor;
 import th.co.aware.common.pdf.dto.ReportRequest;
 import th.co.aware.common.pdf.entity.Pdf;
 import th.co.aware.common.pdf.entity.PdfRepository;
-import th.co.aware.common.pdf.logic.KafkaProcessor;
 
 import java.util.List;
 
@@ -36,6 +36,7 @@ public class KafkaTest {
         Assert.assertEquals("file", pdfList.get(0).getPayload());
 
         repo.delete(pdfList.get(0));
-        Assert.assertNull(pdfList.get(0));
+        List<Pdf> other = repo.findByName("away");
+        Assert.assertEquals(0, other.size());
     }
 }

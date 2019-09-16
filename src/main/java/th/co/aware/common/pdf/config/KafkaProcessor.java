@@ -1,4 +1,4 @@
-package th.co.aware.common.pdf.logic;
+package th.co.aware.common.pdf.config;
 
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.Output;
