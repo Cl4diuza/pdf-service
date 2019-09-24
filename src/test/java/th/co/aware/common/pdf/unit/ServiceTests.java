@@ -9,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
+import th.co.aware.common.pdf.client.StorageClient;
+import th.co.aware.common.pdf.client.StorageClientMock;
 import th.co.aware.common.pdf.dto.ReportRequest;
 import th.co.aware.common.pdf.entity.Pdf;
 import th.co.aware.common.pdf.entity.PdfRepository;
@@ -157,6 +159,11 @@ public class ServiceTests {
         @Bean
         public PdfService pdfService() {
             return new PdfService();
+        }
+
+        @Bean
+        public StorageClient client() {
+            return new StorageClientMock();
         }
     }
 

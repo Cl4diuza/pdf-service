@@ -22,15 +22,25 @@ public class RepositoryTest {
 
     @Test
     public void CRUDRepo() {
+        // create
         Pdf pdf = new Pdf(null, "ss", "s", "s", "s", "s");
         pdf = repo.save(pdf);
         Assert.assertNotNull(pdf);
         Assert.assertNotNull(pdf.getId());
 
+        // read
         Pdf find = repo.findById(pdf.getId()).orElse(null);
-        assert find != null;
+        Assert.assertNotNull(find);
         Assert.assertEquals("ss", find.getName());
 
+        // update
+        find.setPayload("pay");
+        repo.save(find);
+        Pdf again = repo.findById(pdf.getId()).orElse(null);
+        Assert.assertNotNull(again);
+        Assert.assertEquals("pay", again.getPayload());
+
+        // delete
         repo.delete(pdf);
         find = repo.findById(pdf.getId()).orElse(null);
         Assert.assertNull(find);
